@@ -6,28 +6,26 @@ Accepted
 
 ## Context
 
-Repositories with multiple applications, services, modules, packages, or deployable surfaces need predictable names. Without that, commands, docs, specs, and automation become ambiguous.
+MTG Tracking starts with one application but will still contain multiple repository-level artifacts: backend, frontend, shared packages, and test surfaces. The naming rules need to scale before the repository grows.
 
 ## Decision
 
-Each consuming project must define naming conventions for repository-level artifacts during bootstrap.
+The repository adopts the following baseline:
 
-The documented convention should cover, when applicable:
+- Product and primary app name: `mtgtracking`.
+- App-oriented Nx paths: `apps/mtgtracking/backend` and `apps/mtgtracking/frontend`.
+- Shared cross-cutting code: `packages/<purpose>`.
+- Repository and path-based identifiers: kebab-case.
+- Test surfaces should mirror the owning application and stack in their names.
 
-- applications or services
-- packages or libraries
-- modules or bounded contexts
-- test projects or suites
-- build, release, and automation identifiers
+### Naming rules
 
-The kit baseline is:
-
-- names should clearly indicate purpose and ownership
-- naming should scale as the repository grows
-- the same concept should not have multiple names across docs, code, and automation unless documented
+- Names must indicate purpose clearly.
+- The same surface should keep the same name across docs, paths, tasks, and automation.
+- New shared packages should be named by responsibility rather than implementation detail.
 
 ## Consequences
 
-- The kit no longer assumes Nx project names, npm scopes, or one application naming pattern.
-- Branch, commit, and prompt flows can derive scope from project-defined names instead of sample values.
-- Bootstrap must capture the repository's naming rules explicitly.
+- Repository artifacts can scale without ad hoc naming.
+- Future Nx project names have a documented baseline.
+- Automation and specs can derive scope from stable identifiers.

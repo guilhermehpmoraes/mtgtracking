@@ -143,81 +143,95 @@ Review process:
 
 ## Project Context
 
-This file is part of a reusable kit. The consuming repository must replace the sample context during `/init`.
+Repository topology: Nx monorepo.
 
-Document here after bootstrap:
+Main deployable surfaces:
 
-- repository topology
-- main deployable surfaces (apps, services, packages, libraries, etc.)
-- optional domain or module documentation structure
-- key stack/tooling choices
+- `apps/mtgtracking/backend` for the Spring API
+- `apps/mtgtracking/frontend` for the Angular web app
+- `packages/database` for shared persistence abstractions
+- `packages/ui` for reusable UI primitives and shared theme implementation
 
-If the project uses Nx with app-oriented full-stack grouping, document whether it follows:
+Documentation structure:
 
-- `apps/<app>/backend`
-- `apps/<app>/frontend`
-- colocated unit/integration tests inside each stack
-- stack-root end-to-end test folders such as `backend/test/e2e` and `frontend/e2e`
+- repo-wide baseline in `docs/project.spec.md` and `docs/architecture.md`
+- per-app architecture in `docs/specs/apps/mtgtracking/architecture.md`
+- optional domain docs in `docs/specs/domains/` when capability boundaries need stable ownership
+
+This repository follows the app-oriented Nx layout:
+
+- `apps/mtgtracking/backend`
+- `apps/mtgtracking/frontend`
+- backend unit and MockMvc integration tests colocated inside the backend project
+- frontend unit and component tests colocated inside the frontend project
+- frontend e2e tests under `apps/mtgtracking/frontend/e2e`
+- backend stack-level e2e tests, if introduced later, under `apps/mtgtracking/backend/test/e2e`
 
 ## Stack and Tooling
 
-Do not assume a fixed stack.
+Actual project baseline:
 
-After bootstrap, this section should record the actual project choices for:
+- workspace and Nx orchestration: pnpm + Nx
+- backend: Java + Spring + Hibernate + Gradle
+- frontend: Angular + Tailwind CSS
+- database: Neon PostgreSQL
+- schema evolution: Flyway with `ddl-auto: validate`
+- frontend/workspace formatting and linting: Biome
+- backend static analysis: Checkstyle and SpotBugs via Gradle
+- backend tests: JUnit 5, Mockito, MockMvc
+- frontend tests: Jest, Testing Library, Playwright
 
-- languages and runtimes
-- frameworks and libraries
-- package manager or build tool
-- test tooling
-- linting/formatting/static analysis tooling
-- CI and release surfaces
+Warnings should be treated as issues to eliminate, not accepted output.
 
 ## Naming Conventions
 
-Do not assume Portuguese database names, English-only code, or any other hardcoded convention.
+The project uses English everywhere unless an explicit exception is documented.
 
-After bootstrap, this section should document the project's naming matrix in line with ADR-005.
+Naming matrix:
 
-If the project persists business data, bootstrap should also document the entity lifecycle baseline in line with ADR-013, including:
+- code identifiers: English
+- documentation: English
+- packages, apps, and libraries: English, descriptive, and kebab-case where path-based naming applies
+- database objects: English snake_case
+- API contracts and automation identifiers: English
 
-- whether a reusable base entity or equivalent shared persistence abstraction exists
-- the six semantic lifecycle fields for created by/at, modified by/at, and deleted by/at
-- the project-specific field names for those semantics
-- soft delete as the default deletion strategy and any justified exceptions
+Persistence baseline:
+
+- reusable base entity lives in `packages/database`
+- audit fields: `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`
+- soft delete is the default strategy
+- hard-delete exceptions must be documented explicitly
 
 ## Frontend and Design Workflow
 
-If the project includes frontend work, bootstrap should document at least:
+Frontend/design baseline:
 
-- where design artifacts live (for example `design/`)
-- where reusable UI code lives (package, library, module, or equivalent)
-- where global theme and token definitions live
-- whether mobile-first is the default responsive posture
-- when Pencil is required for frontend or UI work
+- design artifacts and Pencil references live in `design/`
+- reusable UI code and shared theme implementation live in `packages/ui`
+- global theme values and reusable visual tokens should be centralized in the shared UI layer
+- mobile-first is the default responsive posture
+- Pencil is required for frontend work with meaningful visual or UX impact
 
-Baseline rules for frontend/UI work:
+Operational rules:
 
-- Use Pencil for changes with meaningful visual or UX impact.
-- Frontend/UI plans with relevant visual impact should include an approved Pencil prototype before plan approval.
-- UI tasks should not move to `Ready` without an approved Pencil reference.
-- If implementation uncovers a meaningful visual change, update Pencil first and then replicate the change in code.
-- Do not let production code become the source of truth for unresolved design decisions.
+- frontend/UI plans with relevant visual impact must reference an approved Pencil prototype before plan approval
+- UI tasks must not move to `Ready` without the approved Pencil reference when the change is visually relevant
+- if implementation uncovers a new material visual change, update Pencil first and then reflect it in code
+- purely technical frontend tasks with no meaningful visual impact may proceed without Pencil only when the task spec says so
 
 ## Nx App Layout (When Applicable)
 
-If the project uses Nx and groups work by application, the default baseline may be:
+This project uses the Nx app-oriented full-stack layout:
 
-- `apps/<app>/backend`
-- `apps/<app>/frontend`
+- `apps/mtgtracking/backend`
+- `apps/mtgtracking/frontend`
 
-Test placement baseline for that structure:
+Test placement baseline:
 
-- backend unit and integration tests colocated with implementation files
-- backend e2e tests under the backend root test area
-- frontend unit and page integration tests colocated with implementation files
-- frontend e2e tests under the frontend root e2e area
-
-Do not assume this structure unless bootstrap confirms the project uses it.
+- backend unit and MockMvc integration tests colocated with implementation files
+- backend e2e tests, if introduced later, under the backend root test area
+- frontend unit and component tests colocated with implementation files
+- frontend e2e tests under `apps/mtgtracking/frontend/e2e`
 
 ## Commit Conventions
 
@@ -242,13 +256,13 @@ Refs: <task-spec-path>
 
 This project uses an **SDD-aligned branching strategy** (ADR-009) managed by the `sdd-branch` skill.
 
-After bootstrap, this section should state:
+Project configuration:
 
-- the integration branch name
-- the release branch or trunk
-- any project-specific merge or publication rules
-
-Do not hardcode `sandbox`, `develop`, or similar names unless the project has explicitly chosen them.
+- integration branch: `develop`
+- release branch: `main`
+- feature branches are created from `develop`
+- task branches are created from the parent feature branch and should be published remotely while active
+- feature branches merge back into `develop`; release promotion to `main` is a separate validated step
 
 ## Code Guidelines
 
@@ -260,7 +274,14 @@ Do not hardcode `sandbox`, `develop`, or similar names unless the project has ex
 
 ### Quality Tooling Gate
 
-After writing or modifying source code, run the project's canonical validation commands as documented during bootstrap. Do not assume `pnpm nx run-many -t check` or any other specific command unless the repository has declared it as canonical.
+After writing or modifying source code, prefer the project's Nx targets as the canonical validation surface.
+
+Current baseline:
+
+- use `pnpm nx <target> <project>` when the target exists
+- use Biome for workspace and frontend formatting/linting checks
+- backend Nx targets should delegate to Gradle tasks for build, test, and static analysis
+- warnings are treated as issues to fix, not acceptable output
 
 ### Test Pass Gate
 

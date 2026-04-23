@@ -6,30 +6,30 @@ Accepted
 
 ## Context
 
-Some projects using this kit will organize work around DDD bounded contexts. Others will use modules, capabilities, services, or product areas. The kit needs a way to document solution boundaries without forcing one architecture style.
+MTG Tracking is a single-product repository, but it still needs explicit boundaries so analytics, match tracking, and future shared concerns do not collapse into one undifferentiated codebase.
 
 ## Decision
 
-The kit supports **boundary-oriented documentation** with optional domain specs.
+The project uses a **capability-oriented boundary model**.
 
-### Baseline Rules
+### Baseline rules
 
-- A project may document boundaries as domains, modules, capability areas, services, or another clear unit.
-- `docs/specs/domains/` is available for this purpose but is optional.
-- Feature specs may reference a `Domain/Area` when that adds clarity.
-- Per-app or per-surface architecture specs are optional and should be added only when repo-wide docs are not enough.
+- Repo-wide structure and cross-cutting concerns live in `docs/architecture.md`.
+- The internal architecture of the application lives in `docs/specs/apps/mtgtracking/architecture.md`.
+- `docs/specs/domains/` remains available for stable capability docs when a boundary needs dedicated ownership.
+- Feature specs should reference a `Domain/Area` when the capability boundary matters for scope or sequencing.
 
-### If the project uses DDD
+### Initial capability candidates
 
-- Domain specs represent bounded contexts.
-- Feature specs should reference the relevant domain.
+- tournament tracking
+- match results
+- deck context
+- analytics and reporting
 
-### If the project does not use DDD
-
-- The same directory can document modules, services, or capability areas instead.
+These are starting points, not hard module commitments. Domain docs should be added only when a capability needs sustained ownership or separate architectural rules.
 
 ## Consequences
 
-- The kit remains compatible with DDD-oriented and non-DDD repositories.
-- Teams still have a consistent place to document boundary ownership.
-- Projects must be explicit during bootstrap about which boundary model they actually use.
+- The repository gets explicit architectural boundaries without forcing formal DDD everywhere.
+- Per-app architecture is documented from the start.
+- Future features have a clear path to introduce domain documentation when the product shape stabilizes further.

@@ -6,29 +6,29 @@ Accepted
 
 ## Context
 
-Naming conventions vary widely across projects. Some teams use English everywhere, some keep data objects in a local language, and some need separate naming rules for code, schemas, interfaces, or documentation.
-
-Without an explicit baseline, templates and prompts end up hardcoding conventions from one project into another.
+MTG Tracking combines documentation, Java backend code, Angular frontend code, database objects, and automation identifiers. Without one explicit language and naming baseline, repository artifacts would drift quickly.
 
 ## Decision
 
-Each consuming project must define a naming matrix during bootstrap covering, when applicable:
+The project uses **English everywhere** unless an explicit exception is documented.
 
-- source code identifiers
-- documentation language
-- package, module, or service names
-- data object names (tables, collections, topics, indexes, constraints)
-- API and event naming
+### Naming matrix
 
-The kit baseline is:
+- **Source code identifiers**: English.
+- **Documentation**: English.
+- **Applications, packages, and libraries**: English, descriptive, and kebab-case where path-based naming applies.
+- **Database objects**: English snake_case for tables, columns, indexes, and constraints.
+- **API contracts**: English, using clear resource and field names.
+- **Branches and automation identifiers**: English.
 
-- keep naming internally consistent
-- prefer descriptive names over abbreviations
-- document exceptions explicitly in ADRs or architecture docs
-- keep specs, ADRs, prompts, and templates in one agreed documentation language for the project
+### Additional rules
+
+- Prefer descriptive names over abbreviations.
+- Keep the same concept under the same name across specs, code, schema, and automation.
+- Document any exception explicitly in an ADR or architecture document before using it.
 
 ## Consequences
 
-- The kit no longer assumes Portuguese data names or English-only code rules.
-- Projects can keep strong conventions, but those conventions must be made explicit.
-- Prompts and templates should refer to the project's naming convention instead of hardcoded examples.
+- The repository now has one unambiguous naming language.
+- Schema and code naming can be aligned without translation layers.
+- Future features can reference a stable naming policy instead of redefining it.

@@ -6,37 +6,26 @@ Accepted
 
 ## Context
 
-Projects that ship user interfaces need a repeatable way to manage design artifacts, reusable UI code, tokens, and implementation flow. Without an explicit baseline, visual decisions drift into production code, prototypes become stale, and small component variations multiply into avoidable UI fragmentation.
-
-This kit needs a frontend workflow that remains generic across stacks while still enforcing a strong design-first rule when a change has meaningful visual or UX impact.
+MTG Tracking includes a user-facing Angular application and needs a deliberate design workflow so analytics screens and data-entry flows do not evolve through ad hoc UI decisions.
 
 ## Decision
 
-When a consuming project includes frontend work, it should define a shared frontend baseline during bootstrap.
+The frontend baseline is:
 
-### Baseline structure
+- `design/` stores design artifacts, prototypes, and Pencil references.
+- `packages/ui` stores reusable UI implementation and shared visual building blocks.
+- Global theme values and reusable visual tokens should be centralized in the shared UI layer.
+- Mobile-first is the default responsive posture.
 
-- Keep design artifacts, prototypes, tokens, and related references under a top-level `design/` area or an equivalent project-documented location.
-- Keep reusable frontend implementation code in shared packages, libraries, or modules rather than duplicating near-identical components inside feature code.
-- Prefer highly reusable component APIs over multiple one-off variants with only minor visual differences.
-- Define a global theme baseline covering items such as color roles, typography, spacing, and other shared tokens.
-- Treat mobile-first behavior as the default responsive design posture unless the consuming project documents an explicit exception.
+### Pencil rules
 
-### Pencil as design source of truth
-
-- Use Pencil for frontend or UI work when the feature changes visual behavior, interaction structure, or user-facing layout in a meaningful way.
-- During planning, frontend or UI features with relevant visual impact must produce or update the Pencil prototype before plan approval.
-- UI tasks should not transition to `Ready` unless the relevant Pencil prototype is approved and referenced in the plan or task artifact.
-- If implementation uncovers a new visual or UX change that materially affects the approved prototype, update Pencil first and then replicate that change in code.
-- Code must not become the source of truth for unresolved visual decisions.
-
-### Scope guard
-
-- Purely technical frontend tasks with no meaningful visual or UX impact may proceed without Pencil, as long as the task spec makes that explicit.
+- Pencil is required for frontend work with meaningful visual or UX impact.
+- Plans and tasks for visual changes must reference the approved Pencil artifact before implementation is considered ready.
+- If implementation uncovers a material visual change, update Pencil first and then reflect it in code.
+- Purely technical frontend tasks with no meaningful visual impact may proceed without Pencil when the task spec states that explicitly.
 
 ## Consequences
 
-- Design and implementation stay synchronized for UI work.
-- Task readiness becomes stricter for frontend changes that affect user experience.
-- Projects need to maintain their design artifacts deliberately instead of treating them as disposable.
-- The kit gains a frontend baseline without hardcoding a specific frontend framework.
+- Design ownership is explicit from the start.
+- Reusable UI code has a documented home in the monorepo.
+- Frontend tasks that affect users visually now have a stricter readiness bar.

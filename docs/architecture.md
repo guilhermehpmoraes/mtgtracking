@@ -2,51 +2,40 @@
 
 ## Purpose
 
-This document gives a stable, high-level view of how a repository using this Spec Kit is organized. It should describe system boundaries, major components, repository topology, and the cross-cutting rules that shape implementation.
-
-Detailed tradeoffs and long-lived technical choices belong in ADRs under `docs/decisions/`. Optional per-application or per-surface architecture specs may live under `docs/specs/apps/<app>/architecture.md` when the repository structure needs that level of detail.
+This document describes the repository-wide architecture for MTG Tracking: its deployable surfaces, shared packages, topology, and cross-cutting rules. Detailed implementation structure for the application itself lives in `docs/specs/apps/mtgtracking/architecture.md`.
 
 ## System Context
 
-This kit is designed to support multiple repository shapes:
+MTG Tracking is a personal analytics product focused on Magic: The Gathering tournament data. The system is planned as a single full-stack application inside an Nx monorepo, with shared packages for persistence and reusable UI.
 
-- single application repositories
-- monorepos with multiple deployable apps or services
-- backend-only or frontend-only repositories
-- libraries, platforms, and internal tools
-
-The concrete project context is established during the bootstrap/init flow and then documented here.
+The repository currently contains the baseline documentation and SDD scaffolding. Application code will be added through normal feature delivery.
 
 ## Guiding Principles
 
-- Keep system boundaries explicit.
-- Prefer repository conventions that are easy to explain and enforce.
-- Record major architectural decisions in ADRs.
-- Keep spec, plan, and task artifacts aligned with the actual repository structure.
-- Treat domains, modules, services, apps, and packages as project-defined concepts rather than forcing one universal layout.
+- Keep backend, frontend, and shared package boundaries explicit.
+- Prefer repository conventions that work cleanly with Nx orchestration.
+- Use migrations as the only schema-change mechanism.
+- Keep analytics logic traceable to persisted source data rather than derived spreadsheets or external notes.
+- Record durable decisions in ADRs before they become implicit conventions.
 
 ## Repository Layout
 
-The consuming project should document its actual layout here after bootstrap. Typical examples include:
-
-### Monorepo Example
+The planned repository layout is:
 
 ```text
 design/
-  <artifacts-and-tokens>/
+  <pencil-artifacts-and-references>
 apps/
-  <app>/
+  mtgtracking/
     backend/
       src/
       test/
     frontend/
       src/
       e2e/
-  <service>/
 packages/
-  <shared-package>/
-libs/
-  <shared-library>/
+  database/
+  ui/
 docs/
   architecture.md
   project.spec.md
@@ -54,102 +43,82 @@ docs/
   specs/
 ```
 
-### Single-Repository Example
+### Surface responsibilities
 
-```text
-src/
-  <modules>
-tests/
-docs/
-  architecture.md
-  project.spec.md
-  decisions/
-  specs/
-```
-
-If the project uses a different structure, document it explicitly instead of trying to force it into one of these examples.
-
-If the project uses Nx with full-stack app grouping, a common baseline is `apps/<app>/backend` and `apps/<app>/frontend`, with unit and integration tests colocated in each stack and end-to-end tests stored in a stack-root test area.
+- `apps/mtgtracking/backend`: Spring application, domain orchestration, Hibernate mappings, Flyway migrations, and database access.
+- `apps/mtgtracking/frontend`: Angular application, analytics screens, user interactions, and Tailwind-based presentation.
+- `packages/database`: reusable persistence abstractions, including the base entity and future shared database helpers.
+- `packages/ui`: reusable UI primitives, theme implementation, and shared visual building blocks.
+- `design/`: Pencil artifacts and design references for visually relevant work.
 
 ## Documentation Hierarchy
 
 | Level | Location | Purpose |
 |-------|----------|---------|
-| Repo-wide | `docs/architecture.md` | Repository/system boundaries, layers, cross-cutting concerns |
-| Project-wide | `docs/project.spec.md` | Project context, goals, bootstrap baseline |
-| Optional per-app | `docs/specs/apps/<app>/architecture.md` | Internal architecture for a specific app, service, or deployable surface |
-| Optional domain | `docs/specs/domains/<domain>.md` | Bounded context, module, or capability area |
+| Repo-wide | `docs/architecture.md` | Repository topology, layers, shared packages, and cross-cutting rules |
+| Project-wide | `docs/project.spec.md` | Product scope, goals, operating model, and bootstrap baseline |
+| App-wide | `docs/specs/apps/mtgtracking/architecture.md` | Internal architecture for the MTG Tracking app |
+| Optional domain | `docs/specs/domains/<domain>.md` | Stable capability ownership when needed |
 | Feature | `docs/specs/features/<feature-id>/` | Feature spec, plan, and task artifacts |
 
 ## Architectural Building Blocks
 
-Projects may use some or all of the following building blocks. Keep only the ones that actually apply:
-
-- **Deployable surfaces**: applications, services, workers, packages, libraries, CLIs, or jobs
-- **Capability boundaries**: domains, modules, bounded contexts, or feature areas
-- **Shared assets**: contracts, schemas, utilities, UI primitives, design tokens, component libraries, SDKs, or platform packages
-- **Operational surfaces**: CI, infrastructure, migrations, observability, release automation
+- **Deployable surfaces**: one backend API and one frontend web application under the same app root.
+- **Capability boundaries**: capability-oriented areas such as tournaments, matches, decks, and analytics, documented further as the product grows.
+- **Shared assets**: database base abstractions, UI primitives, global theme implementation, and interface definitions.
+- **Operational surfaces**: Nx task orchestration, Gradle backend builds, Flyway migrations, and release flow through `main`.
 
 ## Logical Layers
 
-Use the sections below only when they fit the project. Remove or simplify them when they do not.
-
 ### Presentation Layer
 
-UI, API gateway, CLI, or externally facing delivery surface. Owns interaction flow and transport concerns. When the project has a frontend, this layer should also reflect the documented design system, responsive behavior, and approved design artifacts.
+- Angular frontend for user-facing workflows and analytics visualization.
+- Tailwind-based styling backed by shared UI primitives from `packages/ui`.
+- OpenAPI-documented HTTP surface exposed by the backend.
 
 ### Application Layer
 
-Coordinates use cases, orchestration, validation, and integration boundaries.
+- Spring services and use-case orchestration.
+- Validation, transaction boundaries, and application-level coordination.
+- API controllers exposing stable contracts to the frontend.
 
 ### Domain or Capability Layer
 
-Owns business rules, invariants, and core concepts where the project has meaningful domain boundaries.
+- Core product concepts such as tournaments, matches, deck context, and derived performance analytics.
+- Business rules that decide how tracked data becomes meaningful metrics.
 
 ### Data and Integration Layer
 
-Owns persistence, external integrations, eventing, synchronization, and migration concerns.
+- Hibernate-based persistence against Neon PostgreSQL.
+- Flyway migrations as the authoritative schema evolution mechanism.
+- Shared entity lifecycle metadata via a reusable base entity in `packages/database`.
 
 ## Cross-Cutting Concerns
 
-Document the project's actual choices here after bootstrap:
-
-- dependency management policy
-- naming and language conventions
-- entity lifecycle metadata and deletion strategy for persistent data
-- test organization
-- build output conventions
-- API and contract ownership
-- frontend design artifact ownership and location
-- theme and token ownership
-- shared component and form library strategy
-- responsive design baseline
-- shared package or module strategy
-- observability requirements
-- security and authorization boundaries
-
-Use ADRs for the reasoning behind these choices.
+- **Dependency management**: pnpm owns workspace and frontend dependencies; Gradle owns backend dependencies and backend build lifecycles.
+- **Naming**: English across code, docs, database objects, and automation identifiers.
+- **Entity lifecycle**: shared base entity with `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, and `deleted_by`; soft delete is the default.
+- **Testing**: backend unit and MockMvc integration tests colocated near the implementation; frontend unit and component tests colocated; Playwright tests under `apps/mtgtracking/frontend/e2e`.
+- **Interface documentation**: OpenAPI is the source of truth for HTTP contracts.
+- **Design workflow**: `design/` stores artifacts and Pencil references; Pencil is mandatory for meaningful visual or UX changes.
+- **Responsive baseline**: mobile-first.
+- **Shared package strategy**: place long-lived cross-cutting code in `packages/database` and `packages/ui` before duplicating it inside app code.
 
 ## Architectural Decision Process
 
-Any significant choice that changes system shape, introduces a long-lived dependency, or establishes an enduring implementation rule should be captured in an ADR.
-
-The base kit provides a small generic ADR baseline. Consuming projects should update, replace, or extend those ADRs during bootstrap.
+Any long-lived repository, tooling, persistence, or interface rule should be captured in `docs/decisions/`. Feature specs, plans, and tasks should reference those ADRs rather than re-stating the same rationale.
 
 ## Non-Functional Expectations
 
-The architecture should leave room for the expectations that matter to the project, for example:
-
-- authorization and access boundaries
-- observability through logs, metrics, and traces
-- performance and scalability expectations
-- accessibility and usability goals
-- operational safety for data changes and releases
+- Schema safety through explicit migrations and `ddl-auto: validate`.
+- Reliable analytics derived from consistent persisted data.
+- Responsive frontend behavior with a mobile-first baseline.
+- Maintainable code with warning-free quality gates.
+- Clear release flow from `develop` to `main`.
 
 ## Evolution Rules
 
-- Update this document when the repository structure or system boundaries change materially.
-- Add per-app or per-surface architecture specs only when repo-wide documentation becomes too vague.
-- Use ADRs for the why.
-- Use feature specs for the what.
-- Use plans and tasks for the how.
+- Update this document when repository topology or cross-cutting rules change materially.
+- Add or update the app architecture doc when repo-wide documentation becomes too coarse.
+- Introduce domain docs only when capability boundaries need explicit ownership.
+- Use ADRs for the rationale, feature specs for intent, and plans/tasks for implementation detail.

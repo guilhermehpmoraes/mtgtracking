@@ -6,28 +6,21 @@ Accepted
 
 ## Context
 
-Many projects expose interfaces that need durable documentation: HTTP APIs, events, commands, SDKs, CLIs, or internal integration contracts. The original kit hardcoded one API documentation tool from one stack, which made reuse difficult.
+The primary interface in MTG Tracking is the HTTP API exposed by the Spring backend to the Angular frontend. That contract needs one authoritative source of truth.
 
 ## Decision
 
-Projects using this kit must choose and document a standard way to describe externally consumed interfaces.
+The project standardizes on **OpenAPI** for HTTP interface documentation.
 
-Possible approaches include:
+### Rules
 
-- OpenAPI or generated API reference UIs
-- AsyncAPI or event contract docs
-- SDK/reference documentation
-- Markdown-based interface references
-- CLI help and command reference generation
-
-Whatever mechanism is chosen, the project should document:
-
-- the source of truth for the interface definition
-- the publication or access surface
-- the required metadata quality for documented interfaces
+- The backend application is the source of truth for HTTP contract metadata.
+- Generated API documentation should be derived from the backend contract definition rather than maintained manually in a separate document.
+- Endpoints, request models, response models, and error surfaces should be documented with enough metadata to support both frontend consumption and future external review.
+- Non-HTTP interfaces introduced later may use a different fit-for-purpose mechanism, but that choice must be documented explicitly.
 
 ## Consequences
 
-- The kit remains useful beyond HTTP/NestJS projects.
-- Interface documentation becomes an explicit architecture concern.
-- Consuming projects should add stack-specific ADRs if they standardize on a specific tool.
+- Backend and frontend development can align on one contract format.
+- Interface documentation becomes a normal part of backend implementation rather than an afterthought.
+- Future non-HTTP interfaces will need their own explicit documentation choice instead of piggybacking silently on OpenAPI.

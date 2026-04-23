@@ -2,126 +2,122 @@
 
 ## Overview
 
-This repository provides a reusable **Spec Kit** for teams adopting **Spec Driven Development (SDD)**.
+MTG Tracking is a personal application for recording and analyzing Magic: The Gathering tournament performance. The repository uses Nx as a full-stack monorepo and Spec Driven Development as the default delivery model.
 
-The kit is meant to be copied into new or existing repositories and then adapted during an initial bootstrap flow. Its purpose is to give every project a stable foundation for:
+The project baseline establishes one product with two primary deployable surfaces:
 
-- documenting product and technical intent before implementation
-- turning approved specs into implementation plans and task specs
-- keeping architectural decisions explicit through ADRs
-- evolving process rules based on delivery feedback
+- a Spring-based backend API
+- an Angular frontend for data entry, navigation, and analytics visualization
 
-The kit is intentionally **stack-agnostic**. It should support monorepos and single-repository setups, backend-only systems, frontend-only systems, full-stack applications, libraries, services, and multi-application platforms.
+Shared cross-cutting code is expected to live in dedicated packages rather than being duplicated across app surfaces.
 
 ## Problem
 
-Projects often start coding before three foundational questions are answered clearly:
+Tournament and match data are often spread across notes, messaging threads, spreadsheets, or memory. That makes it hard to answer basic questions reliably:
 
-- what is being built and why now
-- how scope, architecture, and implementation work should be documented
-- how delivery decisions and learnings should be preserved for future work
+- how performance changes over time
+- which events, decks, or matchups are driving results
+- whether recent outcomes reflect improvement or short-term variance
 
-Without a reusable baseline, every new repository rebuilds its delivery process from scratch. That creates inconsistent specs, weak traceability, missing architectural rationale, and avoidable rework.
+Without a dedicated system, the data is incomplete, hard to query, and difficult to trust for longitudinal analysis.
 
 ## Goals
 
-- **Standardize SDD adoption** with a repeatable workflow for specs, plans, tasks, implementation, and retrospectives.
-- **Keep setup flexible** so the same kit works for different stacks, architectures, package managers, and repository layouts.
-- **Capture project context early** through a guided bootstrap/init flow that collects stack, topology, conventions, and delivery rules.
-- **Preserve architectural intent** via ADRs and foundational documentation.
-- **Improve over time** by feeding delivery learnings back into templates, prompts, instructions, and decisions.
+- Provide a single source of truth for tournament participation and match history.
+- Make analytical views such as win rate, trends, and evolution over time easy to derive.
+- Keep the backend, frontend, and shared packages aligned inside one Nx monorepo.
+- Use SDD artifacts to keep requirements, plans, tasks, and implementation traceable.
+- Standardize quality, naming, persistence, and branching rules before feature implementation begins.
 
 ## Non-Goals
 
-- Enforcing a single application stack, framework, or language.
-- Requiring a monorepo, Nx, pnpm, or any specific toolchain.
-- Defining a universal domain model for all projects.
-- Replacing project-specific architecture, setup, or operational documentation.
+- Supporting multiple unrelated products in this repository.
+- Treating the repository as a generic reusable kit after bootstrap.
+- Allowing undocumented database or interface conventions to emerge ad hoc.
+- Using hard delete as the default persistence strategy.
 
 ## High-Level Architecture
 
-The kit is organized around a small set of reusable documentation and automation surfaces.
+The repository baseline is an app-oriented Nx monorepo:
 
 ```text
+apps/
+	mtgtracking/
+		backend/
+		frontend/
+packages/
+	database/
+	ui/
+design/
 docs/
-	project.spec.md                Project-level context and SDD baseline
-	architecture.md                Repository/workspace architecture baseline
-	decisions/                     ADRs and foundational decisions
+	project.spec.md
+	architecture.md
+	decisions/
 	specs/
-		templates/                   Reusable templates for feature, plan, and task specs
-		features/                    Generated feature work packages
-		domains/                     Optional domain or bounded-context specs
-		apps/                        Optional per-application architecture specs
-
-.github/
-	copilot-instructions.md        Agent behavior and project rules
-	prompts/                       Step-oriented SDD prompts
-	skills/                        Reusable operational skills
-	agents/                        Optional supporting agents
 ```
 
-The concrete code layout of a consuming repository may vary. Common patterns include:
-
-- monorepo with `apps/`, `packages/`, `libs/`, or `services/`
-- polyrepo or single-application repository with `src/`
-- backend and frontend split repositories
-- platform repositories with multiple deployable applications
+- `apps/mtgtracking/backend` will contain the Spring application, Hibernate mappings, Flyway migrations, and Neon integration.
+- `apps/mtgtracking/frontend` will contain the Angular application and Tailwind-based UI.
+- `packages/database` will host shared persistence abstractions, including the reusable base entity with audit metadata.
+- `packages/ui` will host reusable UI building blocks and global theme implementation shared by frontend features.
+- `design/` will store design artifacts and Pencil references for visually relevant work.
 
 ## Operating Model
 
-The kit assumes a five-step SDD lifecycle:
+The project follows the five-step SDD lifecycle:
 
 1. Draft the feature spec.
 2. Produce the feature plan.
 3. Break the plan into task specs.
 4. Implement approved tasks.
-5. Finish the feature with a retrospective and process sharpening.
+5. Finish the feature with a retrospective.
 
-The exact branch strategy, validation commands, and architecture conventions are configured per project during bootstrap.
+Branching is aligned with that lifecycle:
 
-## Project Bootstrap Principle
+- `develop` is the integration branch.
+- `main` is the release branch.
+- `feature/<feature-id>` branches are created from `develop`.
+- `task/<task-id>` branches are created from the parent feature branch and are published to the remote while active.
 
-Before regular feature work begins, the consuming repository should run a one-time **SDD bootstrap/init flow** that captures:
+## Project Context Baseline
 
-- project name and purpose
-- repository topology and layout
-- stacks, frameworks, and key libraries
-- package manager and task runner
-- architectural conventions
-- testing and quality gates
-- branching and release conventions
-- naming rules and documentation boundaries
+- Repository topology: Nx monorepo.
+- Product scope: one full-stack application named `mtgtracking`.
+- Workspace package manager: pnpm.
+- Backend build tool: Gradle.
+- Persistence: Neon PostgreSQL, Flyway migrations, `ddl-auto: validate`.
+- Naming language: English across code, documentation, schema, and automation.
+- Frontend design baseline: `design/` for artifacts, `packages/ui` for reusable UI, mobile-first posture, Pencil required for meaningful visual changes.
 
-The result of that bootstrap is persisted into the repository's foundational docs and instructions. After the bootstrap is complete, the bootstrap-only prompt or instruction should be removed or retired so the repository continues with the normal SDD flow only.
+## Boundary Model
+
+The repository uses a capability-oriented boundary model.
+
+- Repo-wide boundaries are documented in `docs/architecture.md`.
+- App-specific details live in `docs/specs/apps/mtgtracking/architecture.md`.
+- Domain specs under `docs/specs/domains/` remain optional and should be added when capability boundaries such as tournaments, matches, decks, or analytics need stable ownership documentation.
 
 ## Engineering Principles
 
-These principles apply to the kit unless a project-specific ADR overrides them.
+The generic engineering principles from the kit still apply, with project-specific emphasis on:
 
-- **KISS first**: prefer the simplest process and structure that fully supports delivery.
-- **Explicit decisions**: important technical or workflow choices should be documented.
-- **Self-sufficient artifacts**: specs, plans, and tasks should minimize hidden context.
-- **Validation-driven delivery**: plans and tasks must define how behavior will be checked.
-- **Iterative standardization**: adopt standards from proven delivery patterns, not speculation.
+- clear persistence and analytics rules over convenience shortcuts
+- explicit migrations instead of implicit schema mutation
+- reusable shared packages for database and UI concerns
+- warning-free code and documented validation evidence
 
 Baseline decisions are captured in `docs/decisions/`.
 
 ## Delivery Model
 
-The kit evolves through use:
-
-1. Start from the base templates and instructions.
-2. Adapt them during project bootstrap.
-3. Deliver features through the SDD workflow.
-4. Capture what worked, what failed, and what should become standard.
-5. Update the kit deliberately so the next project starts from a stronger baseline.
+This repository is now the product baseline itself. Future delivery work should extend the documentation and code incrementally rather than re-bootstrap the kit.
 
 ## References
 
 - Agent instructions: `/.github/copilot-instructions.md`
-- Architecture baseline: `docs/architecture.md`
+- Repository architecture: `docs/architecture.md`
+- App architecture: `docs/specs/apps/mtgtracking/architecture.md`
 - ADRs: `docs/decisions/`
 - Templates: `docs/specs/templates/`
 - Feature work packages: `docs/specs/features/`
 - Optional domain specs: `docs/specs/domains/`
-- Optional application specs: `docs/specs/apps/`

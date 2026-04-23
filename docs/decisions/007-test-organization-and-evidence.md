@@ -6,24 +6,27 @@ Accepted
 
 ## Context
 
-The kit already requires validation and test evidence in task specs, but the baseline needs an ADR that explains where tests should live, how they relate to implementation scopes, and why evidence is mandatory.
+MTG Tracking has different validation layers across backend and frontend. The repository needs explicit test placement rules so future Nx projects remain predictable and task evidence stays consistent.
 
 ## Decision
 
-Every project adopting this kit must define its test organization and validation evidence rules during bootstrap.
+The project uses the following test layers:
 
-At minimum, the project should document:
+- **Backend unit tests**: JUnit 5 and Mockito, colocated with the implementation they validate.
+- **Backend HTTP/integration tests**: MockMvc-based tests, also colocated when they validate a specific controller or module boundary.
+- **Frontend unit tests**: Jest, colocated with the implementation.
+- **Frontend component tests**: Testing Library, colocated with the relevant component or feature.
+- **Frontend end-to-end tests**: Playwright under `apps/mtgtracking/frontend/e2e`.
 
-- which test layers exist (unit, integration, e2e, contract, performance, etc.)
-- where those tests live
-- what environment dependencies they require
-- which commands are authoritative for each test layer
-- how test execution evidence is recorded for completed tasks
+### Environment and execution rules
 
-The task-spec `Test Evidence` section remains mandatory for implemented work.
+- Backend tests may require application-context and database-test setup depending on scope.
+- Frontend e2e tests require the runnable frontend and backend surfaces or approved test doubles.
+- Validation should be surfaced through Nx targets when available.
+- Every implemented task must record the exact test commands executed and the observed result summary in the Test Evidence table.
 
 ## Consequences
 
-- Completed work must show real validation evidence.
-- Projects can choose colocated tests, dedicated test modules, or separate repositories, as long as the choice is explicit.
-- Prompts and implementation flows can stay flexible without losing rigor.
+- Tests stay close to the code they validate unless they are stack-level e2e flows.
+- Implementation work cannot be marked complete without real execution evidence.
+- Future generated projects must expose targets that respect these placement rules.

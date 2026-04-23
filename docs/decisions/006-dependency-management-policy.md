@@ -6,26 +6,24 @@ Accepted
 
 ## Context
 
-Different repositories manage dependencies in different ways. Some centralize versions at the root, some use per-module manifests, and some rely on build-tool-native mechanisms such as version catalogs or BOMs.
-
-The kit should not force one dependency strategy, but it must require that the strategy be explicit.
+MTG Tracking mixes JavaScript/TypeScript workspace tooling with a Java backend. Dependency ownership must be explicit so Nx, Angular, Spring, and shared packages do not compete for the same source of truth.
 
 ## Decision
 
-Each consuming project must define one documented dependency management policy during bootstrap.
+The dependency policy is split by stack, with one clear owner per dependency surface:
 
-That policy should answer:
+- **pnpm** owns workspace dependencies, Nx plugins, frontend dependencies, and shared JavaScript/TypeScript packages.
+- **Gradle** owns backend dependencies, backend plugins, and backend build lifecycles.
 
-- where dependency versions are declared
-- how shared/internal packages or modules are referenced
-- how upgrades are coordinated
-- how drift is prevented or detected
-- which package manager or build tool owns dependency resolution
+### Coordination rules
 
-The kit baseline is to prefer **one clear source of truth per repository**, even if the actual mechanism differs by stack.
+- Shared frontend and workspace versions should be centralized through the pnpm workspace.
+- Shared backend versions should be centralized through Gradle-native mechanisms once backend projects are materialized.
+- Internal cross-cutting code should be referenced through workspace packages or project boundaries, not duplicated ad hoc.
+- Dependency upgrades should be coordinated at the repository level so frontend, backend, and tooling remain compatible.
 
 ## Consequences
 
-- The kit stays compatible with JavaScript, Java, and other ecosystems.
-- Dependency ownership becomes auditable.
-- Prompts should consult the documented project policy instead of assuming root-level JavaScript workspaces.
+- Each stack has a clear dependency-resolution owner.
+- Future generators and project setup work must preserve this split rather than collapsing everything into one tool.
+- Tooling and upgrade discussions can point to an explicit dependency policy instead of implied habits.
