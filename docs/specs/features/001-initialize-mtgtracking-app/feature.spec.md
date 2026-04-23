@@ -1,7 +1,7 @@
 # Feature Spec: Initialize MTG Tracking Full-Stack App
 
 - **Feature ID**: 001-initialize-mtgtracking-app
-- **Status**: Approved
+- **Status**: Planned
 - **Created**: 2026-04-23
 - **Last Updated**: 2026-04-23
 - **Owner**: Guilherme Moraes

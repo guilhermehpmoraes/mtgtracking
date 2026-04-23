@@ -3,5 +3,6 @@
     "version": "22.6.5"
   },
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "neverConnectToCloud": true
+  "neverConnectToCloud": true,
+  "analytics": false
 }
