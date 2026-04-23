@@ -28,8 +28,8 @@ Describe the implementation approach for the approved feature with enough techni
 
 - **Repository topology**: [Monorepo | Single repo | Multi-service repo]
 - **Primary stack(s)**: [Languages, frameworks, runtimes]
-- **Build/task runner**: [Nx, Turborepo, Maven, Gradle, npm scripts, Make, etc.]
-- **Dependency management**: [pnpm, npm, yarn, Maven, Gradle, etc.]
+- **Build/task runner**: [Nx, Turborepo, Maven, Gradle, pnpm scripts, Make, etc.]
+- **Dependency management**: [pnpm, yarn, npm, Maven, Gradle, etc.]
 - **Data stores**: [PostgreSQL, MySQL, MongoDB, Redis, Kafka, S3, N/A, etc.]
 - **Tests**: [Unit, integration, e2e tooling actually used by the project]
 

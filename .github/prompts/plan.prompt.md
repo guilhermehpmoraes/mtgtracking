@@ -88,7 +88,7 @@ After all questions are resolved:
 - **API contracts**: Exact endpoints, HTTP methods, request/response shapes with field names and types, validation rules, error codes and messages.
 - **UI contracts** (if applicable): Routes, component hierarchy, states (loading/empty/error/success), field validations, interaction behavior, responsive behavior, and Pencil prototype references when visual impact exists.
 - **File paths**: Exact files to create or modify — no vague references like "backend module". List actual paths.
-- **Dependencies**: Exact npm packages with versions (or "latest"), shared workspace packages, external services.
+- **Dependencies**: Exact packages with versions (or "latest"), shared pnpm workspace packages, external services.
 
 #### Documentation impact mapping
 
