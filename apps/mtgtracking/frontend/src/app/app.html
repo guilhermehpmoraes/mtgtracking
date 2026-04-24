@@ -1,0 +1,47 @@
+
+<section class="min-h-screen overflow-x-clip bg-(--page-background) text-(--text-strong)">
+	<div class="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
+		<header class="shell__hero rounded-4xl border border-(--stroke-muted) bg-(--surface-panel) px-6 py-8 shadow-(--shadow-soft) sm:px-8 sm:py-10">
+			<p class="shell__eyebrow">Foundation shell</p>
+			<h1 class="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">MTG Tracking</h1>
+			<p class="mt-4 max-w-2xl text-base leading-7 text-(--text-muted) sm:text-lg">
+				The frontend surface is online. Tournament capture, deck context, and analytics modules will land inside this frame as the next features are delivered.
+			</p>
+		</header>
+
+		<section class="grid gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(18rem,1fr)]">
+			<article class="shell__panel rounded-3xl border border-(--stroke-muted) bg-(--surface-soft) p-5 shadow-(--shadow-soft) sm:p-6">
+				<p class="text-sm font-medium uppercase tracking-[0.24em] text-(--accent-strong)">What is ready</p>
+				<ul class="mt-4 grid gap-3 text-sm leading-6 text-(--text-muted) sm:grid-cols-2">
+					<li class="slot-card rounded-[1.25rem] border border-(--stroke-muted) bg-white/80 p-4">
+						Angular standalone bootstrap with routing.
+					</li>
+					<li class="slot-card rounded-[1.25rem] border border-(--stroke-muted) bg-white/80 p-4">
+						Tailwind CSS v4 imported from the global stylesheet.
+					</li>
+					<li class="slot-card rounded-[1.25rem] border border-(--stroke-muted) bg-white/80 p-4">
+						Shared UI theme tokens centralized in <code>packages/ui</code>.
+					</li>
+					<li class="slot-card rounded-[1.25rem] border border-(--stroke-muted) bg-white/80 p-4">
+						Jest and Playwright smoke coverage wired through Nx.
+					</li>
+				</ul>
+			</article>
+
+			<section aria-label="Future navigation and metrics" class="shell__panel rounded-3xl border border-(--stroke-muted) bg-(--surface-panel) p-5 shadow-(--shadow-soft) sm:p-6">
+				<p class="text-sm font-medium uppercase tracking-[0.24em] text-(--accent-strong)">Reserved space</p>
+				<div class="mt-4 grid gap-3">
+					<div class="slot-card rounded-[1.25rem] border border-dashed border-(--stroke-muted) p-4">
+						Navigation groups and saved views
+					</div>
+					<div class="slot-card rounded-[1.25rem] border border-dashed border-(--stroke-muted) p-4">
+						Event metrics snapshot cards
+					</div>
+					<div class="slot-card rounded-[1.25rem] border border-dashed border-(--stroke-muted) p-4">
+						Recent deck and matchup quick links
+					</div>
+				</div>
+			</section>
+		</section>
+	</div>
+</section>

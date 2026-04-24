@@ -1,0 +1,39 @@
+:host {
+    display: block;
+}
+
+.shell__hero {
+    overflow: hidden;
+    position: relative;
+}
+
+.shell__hero::after {
+    background: radial-gradient(
+        circle at top right,
+        color-mix(in srgb, var(--accent-soft) 85%, transparent) 0,
+        transparent 60%
+    );
+    content: "";
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+}
+
+.shell__eyebrow {
+    color: var(--accent-strong);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    margin: 0;
+    position: relative;
+    text-transform: uppercase;
+    z-index: 1;
+}
+
+.shell__panel {
+    backdrop-filter: blur(18px);
+}
+
+.slot-card {
+    min-width: 0;
+}

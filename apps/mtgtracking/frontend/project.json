@@ -1,0 +1,86 @@
+{
+    "name": "mtgtracking-frontend",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "application",
+    "prefix": "app",
+    "sourceRoot": "apps/mtgtracking/frontend/src",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@angular/build:application",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/apps/mtgtracking/frontend",
+                "browser": "apps/mtgtracking/frontend/src/main.ts",
+                "tsConfig": "apps/mtgtracking/frontend/tsconfig.app.json",
+                "assets": [
+                    {
+                        "glob": "**/*",
+                        "input": "apps/mtgtracking/frontend/public"
+                    }
+                ],
+                "styles": ["apps/mtgtracking/frontend/src/styles.css"]
+            },
+            "configurations": {
+                "production": {
+                    "budgets": [
+                        {
+                            "type": "initial",
+                            "maximumWarning": "500kb",
+                            "maximumError": "1mb"
+                        },
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "4kb",
+                            "maximumError": "8kb"
+                        }
+                    ],
+                    "outputHashing": "all"
+                },
+                "development": {
+                    "optimization": false,
+                    "extractLicenses": false,
+                    "sourceMap": true
+                }
+            },
+            "defaultConfiguration": "production"
+        },
+        "serve": {
+            "continuous": true,
+            "executor": "@angular/build:dev-server",
+            "configurations": {
+                "production": {
+                    "buildTarget": "mtgtracking-frontend:build:production"
+                },
+                "development": {
+                    "buildTarget": "mtgtracking-frontend:build:development"
+                }
+            },
+            "defaultConfiguration": "development"
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "apps/mtgtracking/frontend/jest.config.cts",
+                "tsConfig": "apps/mtgtracking/frontend/tsconfig.spec.json"
+            }
+        },
+        "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "pnpm exec biome check apps/mtgtracking/frontend/project.json apps/mtgtracking/frontend/src apps/mtgtracking/frontend/jest.config.cts apps/mtgtracking/frontend/tsconfig.app.json apps/mtgtracking/frontend/tsconfig.json apps/mtgtracking/frontend/tsconfig.spec.json"
+            }
+        },
+        "serve-static": {
+            "continuous": true,
+            "executor": "@nx/web:file-server",
+            "options": {
+                "buildTarget": "mtgtracking-frontend:build",
+                "port": 4200,
+                "staticFilePath": "dist/apps/mtgtracking/frontend/browser",
+                "spa": true
+            }
+        }
+    }
+}

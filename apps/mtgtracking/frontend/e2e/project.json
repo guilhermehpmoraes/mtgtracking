@@ -1,0 +1,9 @@
+{
+    "name": "mtgtracking-frontend-e2e",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "root": "apps/mtgtracking/frontend/e2e",
+    "sourceRoot": "apps/mtgtracking/frontend/e2e/src",
+    "projectType": "application",
+    "implicitDependencies": ["mtgtracking-frontend"],
+    "targets": {}
+}

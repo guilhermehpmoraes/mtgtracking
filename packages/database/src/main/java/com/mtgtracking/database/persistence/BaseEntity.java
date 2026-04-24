@@ -1,9 +1,10 @@
 package com.mtgtracking.database.persistence;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
 import java.time.OffsetDateTime;
 import java.util.Objects;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class BaseEntity {

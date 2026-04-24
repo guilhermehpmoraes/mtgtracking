@@ -2,12 +2,13 @@
 
 - **Feature ID**: 001-initialize-mtgtracking-app
 - **Task ID**: T003
-- **Status**: Ready
+- **Status**: In Progress
 - **Type**: Task
 - **Parallelizable**: Yes
 - **Parallelization Notes**: After `T001` completes, this task can run independently of `T002` because it touches the Angular frontend and shared UI surface only.
 - **Date**: 2026-04-24
-- **Owner**: TBD
+- **Last Updated**: 2026-04-24
+- **Owner**: Guilherme Moraes
 - **Feature Folder**: docs/specs/features/001-initialize-mtgtracking-app/
 - **Feature Spec**: docs/specs/features/001-initialize-mtgtracking-app/feature.spec.md
 - **Feature Plan**: docs/specs/features/001-initialize-mtgtracking-app/plan.spec.md
@@ -193,6 +194,7 @@ Record status transitions to keep execution history visible.
 | 2026-04-24 | Draft  | Task created from approved feature plan |
 | 2026-04-24 | Awaiting Dependency | Reviewed and approved, waiting for T001 to reach Done before implementation can start |
 | 2026-04-24 | Ready | Dependency `T001` is done; frontend and UI foundation can start. |
+| 2026-04-24 | In Progress | Angular frontend, shared UI theme package, and Nx validation targets were implemented; build, lint, unit test, and manual browser verification pass, while the Nx Playwright smoke run is blocked by missing system library `libnspr4.so` for Chromium in this environment. |
 
 ## 13. Observations
 
@@ -200,3 +202,4 @@ Capture runtime observations during implementation — environment issues, libra
 
 - This task explicitly does not require Pencil because the initialization shell has no meaningful visual or UX impact beyond foundational layout.
 - If Nx generator defaults try to introduce legacy Tailwind or PostCSS wiring, normalize the output back to the approved Tailwind CSS v4 baseline before considering the task complete.
+- Nx Playwright smoke execution is currently blocked on this machine because the bundled Chromium binary cannot start without system library `libnspr4.so`; the application shell itself still renders correctly through `pnpm nx run mtgtracking-frontend:serve` and browser verification at `/`.

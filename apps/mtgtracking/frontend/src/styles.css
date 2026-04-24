@@ -1,0 +1,15 @@
+@import "../../../../packages/ui/src/lib/theme.css";
+@import "tailwindcss";
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}

@@ -1,7 +1,12 @@
 onlyBuiltDependencies:
+  - '@swc/core'
   - '@parcel/watcher'
+  - esbuild
   - less
+  - lmdb
+  - msgpackr-extract
   - nx
+  - unrs-resolver
 
 allowedDeprecatedVersions:
   node-domexception: '*'
@@ -12,7 +17,5 @@ peerDependencyRules:
     - node-fetch
 
 packages:
-  - 'apps/*'
   - 'apps/**'
-  - 'packages/*'
   - 'packages/**'
