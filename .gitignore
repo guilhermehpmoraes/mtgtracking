@@ -3,6 +3,9 @@
 .nx/cache
 .nx/workspace-data
 .nx/polygraph
+.gradle/
+build/
+**/build/
 node_modules/
 .claude/worktrees
 .claude/settings.local.json

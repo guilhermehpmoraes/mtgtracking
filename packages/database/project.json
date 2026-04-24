@@ -1,0 +1,28 @@
+{
+    "name": "database",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "root": "packages/database",
+    "sourceRoot": "packages/database/src",
+    "projectType": "library",
+    "targets": {
+        "build": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "./gradlew :packages:database:build"
+            }
+        },
+        "test": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "./gradlew :packages:database:test"
+            }
+        },
+        "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "./gradlew :packages:database:lint"
+            }
+        }
+    },
+    "tags": ["type:lib", "scope:database"]
+}

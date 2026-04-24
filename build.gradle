@@ -1,0 +1,71 @@
+import com.github.spotbugs.snom.SpotBugsTask
+import org.gradle.api.plugins.JavaPlugin
+
+plugins {
+    id 'org.springframework.boot' version '3.5.9' apply false
+    id 'io.spring.dependency-management' version '1.1.7' apply false
+    id 'org.flywaydb.flyway' version '12.4.0' apply false
+    id 'com.github.spotbugs' version '6.2.4' apply false
+}
+
+allprojects {
+    group = 'com.mtgtracking'
+    version = '0.0.0-SNAPSHOT'
+}
+
+subprojects {
+    apply plugin: 'checkstyle'
+    apply plugin: 'com.github.spotbugs'
+
+    checkstyle {
+        toolVersion = '10.21.2'
+        configDirectory = rootProject.file('config/checkstyle')
+    }
+
+    tasks.withType(Checkstyle).configureEach {
+        reports {
+            xml.required = false
+            html.required = true
+        }
+    }
+
+    spotbugs {
+        ignoreFailures = false
+        showProgress = false
+    }
+
+    tasks.withType(SpotBugsTask).configureEach {
+        reports {
+            html.required = true
+            xml.required = false
+        }
+    }
+
+    plugins.withType(JavaPlugin).configureEach {
+        java {
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(21)
+            }
+
+            withSourcesJar()
+        }
+
+        tasks.withType(JavaCompile).configureEach {
+            options.encoding = 'UTF-8'
+        }
+
+        tasks.withType(Test).configureEach {
+            useJUnitPlatform()
+        }
+
+        tasks.register('lint') {
+            group = 'verification'
+            dependsOn(
+                tasks.named('checkstyleMain'),
+                tasks.named('checkstyleTest'),
+                tasks.named('spotbugsMain'),
+                tasks.named('spotbugsTest')
+            )
+        }
+    }
+}
