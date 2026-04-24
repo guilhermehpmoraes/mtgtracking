@@ -2,7 +2,7 @@
 
 - **Feature ID**: 001-initialize-mtgtracking-app
 - **Task ID**: T003
-- **Status**: Awaiting Dependency
+- **Status**: Ready
 - **Type**: Task
 - **Parallelizable**: Yes
 - **Parallelization Notes**: After `T001` completes, this task can run independently of `T002` because it touches the Angular frontend and shared UI surface only.
@@ -139,7 +139,7 @@ N/A. This task does not create or alter tables, migrations, entities, or databas
 
 A task is ready for implementation only if:
 
-- [ ] Status is `Ready`.
+- [x] Status is `Ready`.
 - [x] Scope is explicit and bounded.
 - [x] Required contracts are defined (API, DTO, event, UI state, schema).
 - [x] Technical specification is detailed enough for independent implementation.
@@ -147,7 +147,7 @@ A task is ready for implementation only if:
 - [x] For visually relevant UI tasks, an approved Pencil reference is present.
 - [x] Acceptance criteria are testable.
 - [x] Open questions are resolved or captured as explicit assumptions.
-- [ ] All dependency tasks are `Done` (if any dependencies exist).
+- [x] All dependency tasks are `Done` (if any dependencies exist).
 
 ## 9. Definition of Done
 
@@ -192,6 +192,7 @@ Record status transitions to keep execution history visible.
 | ---------- | ------ | ----- |
 | 2026-04-24 | Draft  | Task created from approved feature plan |
 | 2026-04-24 | Awaiting Dependency | Reviewed and approved, waiting for T001 to reach Done before implementation can start |
+| 2026-04-24 | Ready | Dependency `T001` is done; frontend and UI foundation can start. |
 
 ## 13. Observations
 

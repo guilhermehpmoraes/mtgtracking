@@ -1,0 +1,21 @@
+{
+    "name": "mtgtracking",
+    "version": "0.0.0",
+    "private": true,
+    "packageManager": "pnpm@10.33.1",
+    "nx": {},
+    "scripts": {
+        "nx": "nx",
+        "show:projects": "pnpm nx show projects",
+        "format": "pnpm exec biome format --write .",
+        "lint": "pnpm exec biome check .",
+        "test": "pnpm nx run-many -t test"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "latest",
+        "@nx/angular": "22.6.5",
+        "@nx/js": "22.6.5",
+        "nx": "22.6.5",
+        "tailwindcss": "^4.0.0"
+    }
+}

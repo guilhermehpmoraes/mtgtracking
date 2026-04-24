@@ -1,0 +1,19 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": ".",
+        "rootDir": ".",
+        "target": "ES2022",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "lib": ["ES2022", "DOM"],
+        "useDefineForClassFields": false,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "sourceMap": true,
+        "declaration": false,
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true
+    },
+    "exclude": ["node_modules", "tmp"]
+}

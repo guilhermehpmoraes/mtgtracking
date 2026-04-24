@@ -1,0 +1,18 @@
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - less
+  - nx
+
+allowedDeprecatedVersions:
+  node-domexception: '*'
+  whatwg-encoding: '*'
+
+peerDependencyRules:
+  allowAny:
+    - node-fetch
+
+packages:
+  - 'apps/*'
+  - 'apps/**'
+  - 'packages/*'
+  - 'packages/**'
