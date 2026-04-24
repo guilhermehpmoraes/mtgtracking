@@ -2,12 +2,13 @@
 
 - **Feature ID**: 001-initialize-mtgtracking-app
 - **Task ID**: T002
-- **Status**: Ready
+- **Status**: Done
 - **Type**: Task
 - **Parallelizable**: No
 - **Parallelization Notes**: This task depends on `T001` for root pnpm/Nx tooling and can then proceed independently of the frontend task, but it should not start before the workspace root is installable.
 - **Date**: 2026-04-24
-- **Owner**: TBD
+- **Last Updated**: 2026-04-24
+- **Owner**: Guilherme Moraes
 - **Feature Folder**: docs/specs/features/001-initialize-mtgtracking-app/
 - **Feature Spec**: docs/specs/features/001-initialize-mtgtracking-app/feature.spec.md
 - **Feature Plan**: docs/specs/features/001-initialize-mtgtracking-app/plan.spec.md
@@ -182,12 +183,12 @@ A task is ready for implementation only if:
 
 ## 9. Definition of Done
 
-- [ ] Status moved to `Done`.
-- [ ] All related tests (unit and integration) pass — no test failures allowed.
-- [ ] **Section 10 (Test Evidence) is filled** with the exact command(s) executed and their output summary proving all tests pass.
-- [ ] Biome reports zero warnings and zero errors on all changed files.
-- [ ] Acceptance criteria are validated by tests or clear verification evidence.
-- [ ] For visually relevant UI changes, the Pencil artifact remains synchronized with the delivered code.
+- [x] Status moved to `Done`.
+- [x] All related tests (unit and integration) pass — no test failures allowed.
+- [x] **Section 10 (Test Evidence) is filled** with the exact command(s) executed and their output summary proving all tests pass.
+- [x] Biome reports zero warnings and zero errors on all changed files.
+- [x] Acceptance criteria are validated by tests or clear verification evidence.
+- [x] For visually relevant UI changes, the Pencil artifact remains synchronized with the delivered code. N/A for this task.
 
 ## 10. Test Evidence
 
@@ -195,15 +196,21 @@ This section is **mandatory** before marking the task as `Done`. Paste the exact
 
 | # | Command | Result | Timestamp |
 | - | ------- | ------ | --------- |
+| 1 | `pnpm nx run mtgtracking-backend:lint` | `mtgtracking-backend:lint` succeeded; Gradle wrapper ran 8 actionable tasks, 0 failed, 0 warnings accepted. | 2026-04-24 14:23 -0300 |
+| 2 | `CI=true pnpm nx run-many -t build test lint -p mtgtracking-backend database --parallel=1 --outputStyle=static` | 6 of 6 targets succeeded across 2 projects (`database:lint`, `database:build`, `database:test`, `mtgtracking-backend:lint`, `mtgtracking-backend:build`, `mtgtracking-backend:test`); 0 failed. | 2026-04-24 14:23 -0300 |
+| 3 | `grep -R '<testsuite ' apps/mtgtracking/backend/build/test-results/test --include='*.xml'` | Backend JUnit report recorded `tests="2"`, `skipped="0"`, `failures="0"`, `errors="0"` for `MtgTrackingBackendApplicationTests`. | 2026-04-24 14:24 -0300 |
+| 4 | `./gradlew :packages:database:test --console=plain` | `:packages:database:test NO-SOURCE`; build successful with 0 test classes and 0 failures. | 2026-04-24 14:24 -0300 |
+| 5 | `curl -fsS http://localhost:8080/actuator/health` | Live serve validation returned `{"status":"UP"}` from the running backend. | 2026-04-24 14:24 -0300 |
+| 6 | `pnpm exec biome check apps/mtgtracking/backend/project.json packages/database/project.json` | Checked 2 files after formatting; 0 fixes applied, 0 errors, 0 warnings. | 2026-04-24 14:25 -0300 |
 
 **Rules**:
 - Every test suite relevant to the task must have a row in this table.
 - "Result" must include pass/fail/skip counts copied from actual terminal output.
 - If any test fails, the task stays `In Progress` — do not fill this section with failing results and mark Done.
 - This section is never pre-filled during Step 3 (Task Breakdown) — it is populated only during Step 4 (Implementation).
-- [ ] Edge cases listed in this task are covered.
-- [ ] Links to changed files/PR/tests are registered.
-- [ ] Feature spec and plan traceability remains intact.
+- [x] Edge cases listed in this task are covered.
+- [x] Links to changed files/PR/tests are registered.
+- [x] Feature spec and plan traceability remains intact.
 
 ## 11. Jira Mapping (Optional)
 
@@ -224,6 +231,8 @@ Record status transitions to keep execution history visible.
 | 2026-04-24 | Draft  | Task created from approved feature plan |
 | 2026-04-24 | Awaiting Dependency | Reviewed and approved, waiting for T001 to reach Done before implementation can start |
 | 2026-04-24 | Ready | Dependency `T001` is done; backend and database foundation can start. |
+| 2026-04-24 | In Progress | Implementation started on task branch `task/T002`. |
+| 2026-04-24 | Done | Gradle multi-project build, backend shell, database base entity, Nx targets, and live actuator health validation completed successfully. |
 
 ## 13. Observations
 
@@ -231,3 +240,5 @@ Capture runtime observations during implementation — environment issues, libra
 
 - This task must remain strictly foundation-only: no product API routes, no business entities, and no domain migration file belong here.
 - If local Java compatibility forces a move from Java 21 to Java 17, update the plan and task evidence explicitly before marking the task done.
+- A Gradle wrapper was added so Nx backend targets do not depend on a machine-level Gradle installation.
+- The backend defaults to an in-memory H2 datasource for local startup and test execution while keeping PostgreSQL on the runtime classpath for future environment-backed deployment wiring.

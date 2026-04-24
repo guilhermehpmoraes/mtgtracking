@@ -1,0 +1,21 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+    repositories {
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'mtgtracking'
+
+include ':apps:mtgtracking:backend'
+include ':packages:database'
+
+project(':apps:mtgtracking:backend').projectDir = file('apps/mtgtracking/backend')
+project(':packages:database').projectDir = file('packages/database')

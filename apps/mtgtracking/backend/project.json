@@ -1,0 +1,34 @@
+{
+    "name": "mtgtracking-backend",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "root": "apps/mtgtracking/backend",
+    "sourceRoot": "apps/mtgtracking/backend/src",
+    "projectType": "application",
+    "targets": {
+        "build": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "./gradlew :apps:mtgtracking:backend:build"
+            }
+        },
+        "test": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "./gradlew :apps:mtgtracking:backend:test"
+            }
+        },
+        "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "./gradlew :apps:mtgtracking:backend:lint"
+            }
+        },
+        "serve": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "./gradlew :apps:mtgtracking:backend:bootRun"
+            }
+        }
+    },
+    "tags": ["type:app", "scope:backend"]
+}
