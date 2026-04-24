@@ -2,12 +2,13 @@
 
 - **Feature ID**: 001-initialize-mtgtracking-app
 - **Task ID**: T001
-- **Status**: Ready
+- **Status**: Done
 - **Type**: Task
 - **Parallelizable**: No
 - **Parallelization Notes**: This task establishes the root pnpm, Nx, Biome, and TypeScript baseline required before backend and frontend project scaffolding can run deterministically.
 - **Date**: 2026-04-24
-- **Owner**: TBD
+- **Last Updated**: 2026-04-24
+- **Owner**: Guilherme Moraes
 - **Feature Folder**: docs/specs/features/001-initialize-mtgtracking-app/
 - **Feature Spec**: docs/specs/features/001-initialize-mtgtracking-app/feature.spec.md
 - **Feature Plan**: docs/specs/features/001-initialize-mtgtracking-app/plan.spec.md
@@ -140,12 +141,12 @@ A task is ready for implementation only if:
 
 ## 9. Definition of Done
 
-- [ ] Status moved to `Done`.
-- [ ] All related tests (unit and integration) pass — no test failures allowed.
-- [ ] **Section 10 (Test Evidence) is filled** with the exact command(s) executed and their output summary proving all tests pass.
-- [ ] Biome reports zero warnings and zero errors on all changed files.
-- [ ] Acceptance criteria are validated by tests or clear verification evidence.
-- [ ] For visually relevant UI changes, the Pencil artifact remains synchronized with the delivered code.
+- [x] Status moved to `Done`.
+- [x] All related tests (unit and integration) pass — no test failures allowed.
+- [x] **Section 10 (Test Evidence) is filled** with the exact command(s) executed and their output summary proving all tests pass.
+- [x] Biome reports zero warnings and zero errors on all changed files.
+- [x] Acceptance criteria are validated by tests or clear verification evidence.
+- [x] For visually relevant UI changes, the Pencil artifact remains synchronized with the delivered code. N/A for this task.
 
 ## 10. Test Evidence
 
@@ -153,15 +154,20 @@ This section is **mandatory** before marking the task as `Done`. Paste the exact
 
 | # | Command | Result | Timestamp |
 | - | ------- | ------ | --------- |
+| 1 | `pnpm install` | Install completed successfully; lockfile up to date, 0 warnings, 0 errors. | 2026-04-24 14:00 -03 |
+| 2 | `pnpm nx show projects` | Command succeeded; 1 project listed (`mtgtracking`), 0 errors. | 2026-04-24 14:00 -03 |
+| 3 | `pnpm exec biome check package.json biome.json tsconfig.base.json nx.json` | Checked 4 files; 0 fixes applied; 0 errors, 0 warnings. | 2026-04-24 14:00 -03 |
+| 4 | `pnpm exec biome check biome.json` | Checked 1 file after aligning the Biome baseline with the repository preference; 0 fixes applied; 0 errors, 0 warnings. | 2026-04-24 14:07 -03 |
+| 5 | `pnpm exec biome check biome.json package.json tsconfig.base.json nx.json` | Checked 4 files after normalizing the root files to the current Biome baseline; 0 fixes applied; 0 errors, 0 warnings. | 2026-04-24 14:11 -03 |
 
 **Rules**:
 - Every test suite relevant to the task must have a row in this table.
 - "Result" must include pass/fail/skip counts copied from actual terminal output.
 - If any test fails, the task stays `In Progress` — do not fill this section with failing results and mark Done.
 - This section is never pre-filled during Step 3 (Task Breakdown) — it is populated only during Step 4 (Implementation).
-- [ ] Edge cases listed in this task are covered.
-- [ ] Links to changed files/PR/tests are registered.
-- [ ] Feature spec and plan traceability remains intact.
+- [x] Edge cases listed in this task are covered.
+- [x] Links to changed files/PR/tests are registered.
+- [x] Feature spec and plan traceability remains intact.
 
 ## 11. Jira Mapping (Optional)
 
@@ -181,6 +187,8 @@ Record status transitions to keep execution history visible.
 | ---------- | ------ | ----- |
 | 2026-04-24 | Draft  | Task created from approved feature plan |
 | 2026-04-24 | Ready  | Reviewed and approved for implementation; no dependencies block execution |
+| 2026-04-24 | In Progress | Implementation started on task branch `task/T001` |
+| 2026-04-24 | Done | Root workspace tooling created and validated with pnpm, Nx, and Biome. |
 
 ## 13. Observations
 
@@ -188,3 +196,5 @@ Capture runtime observations during implementation — environment issues, libra
 
 - Nx is already pinned in `nx.json`; implementation should treat this as an existing baseline rather than reinitializing the workspace.
 - This task should stay minimal and should not start project scaffolding that belongs in `T002` or `T003`.
+- pnpm v10 required explicit workspace policy for trusted dependency build scripts and accepted upstream transitive package warnings so `pnpm install` remains warning-free without interactive approval prompts.
+- The Biome baseline was updated after initial completion to match the preferred repository convention, with the `$schema` aligned to the installed CLI version to keep local validation passing.
