@@ -1,9 +1,9 @@
 # Feature Spec: Initialize MTG Tracking Full-Stack App
 
 - **Feature ID**: 001-initialize-mtgtracking-app
-- **Status**: Planned
+- **Status**: In Implementation
 - **Created**: 2026-04-23
-- **Last Updated**: 2026-04-23
+- **Last Updated**: 2026-04-24
 - **Owner**: Guilherme Moraes
 - **Domain/Area**: Platform Foundation
 - **Product/Surface**: mtgtracking backend, frontend, and shared packages
@@ -180,9 +180,9 @@ Capture enough technical detail so each generated task can be implemented withou
 
 ### Gate to move Step 2 -> Step 3
 
-- [ ] Feature plan is approved.
-- [ ] Task files are generated under `docs/specs/features/<feature-id>/tasks/`.
-- [ ] At least one task has status `Ready`.
+- [x] Feature plan is approved.
+- [x] Task files are generated under `docs/specs/features/<feature-id>/tasks/`.
+- [x] At least one task has status `Ready`.
 
 ## 11. Optional Data Impact
 
